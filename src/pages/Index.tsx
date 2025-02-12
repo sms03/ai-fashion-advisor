@@ -1,17 +1,49 @@
 
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import ImageUploader from '../components/ImageUploader';
 import ScenarioInput from '../components/ScenarioInput';
-import { Camera, Sparkles } from 'lucide-react';
+import { Camera, Sparkles, User } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/components/ui/use-toast';
 
 const Index = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [session, setSession] = useState<any>(null);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleImageSelect = (file: File) => {
     setSelectedImage(file);
   };
 
-  const handleScenarioSubmit = (scenario: string) => {
+  const handleScenarioSubmit = async (scenario: string) => {
+    if (!session) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to get fashion advice",
+        variant: "destructive",
+      });
+      navigate('/auth');
+      return;
+    }
+
+    // Here you would handle the image upload and API call
     console.log('Scenario:', scenario);
     console.log('Image:', selectedImage);
   };
@@ -40,6 +72,24 @@ const Index = () => {
 
   return (
     <div className="min-h-screen gradient-bg overflow-hidden">
+      {/* Navigation */}
+      <nav className="absolute top-0 right-0 p-4">
+        {session ? (
+          <div className="flex items-center gap-4">
+            <Button variant="outline" asChild>
+              <Link to="/profile">
+                <User className="w-4 h-4 mr-2" />
+                Profile
+              </Link>
+            </Button>
+          </div>
+        ) : (
+          <Button variant="outline" asChild>
+            <Link to="/auth">Sign In</Link>
+          </Button>
+        )}
+      </nav>
+
       {/* Hero Section */}
       <section className="relative py-24 px-4">
         <div className="max-w-3xl mx-auto text-center space-y-8">
