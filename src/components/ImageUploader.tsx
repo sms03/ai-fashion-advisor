@@ -1,7 +1,7 @@
 
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, Image as ImageIcon } from 'lucide-react';
+import { Upload } from 'lucide-react';
 
 interface ImageUploaderProps {
   onImageSelect: (file: File) => void;
@@ -33,10 +33,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageSelect }) => {
   return (
     <div
       {...getRootProps()}
-      className={`relative w-full max-w-md mx-auto h-64 rounded-xl border-2 border-dashed 
-        ${isDragActive ? 'border-primary animate-pulse' : 'border-gray-300'} 
-        transition-all duration-300 ease-in-out hover:border-primary-light
-        bg-fashion-card backdrop-blur-sm cursor-pointer`}
+      className={`relative w-full max-w-3xl mx-auto h-64 rounded-lg border-2 border-dashed 
+        ${isDragActive ? 'border-accent animate-pulse' : 'border-fashion-border'} 
+        transition-all duration-300 ease-in-out hover:border-accent
+        bg-fashion-input cursor-pointer`}
     >
       <input {...getInputProps()} />
       {preview ? (
@@ -49,7 +49,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageSelect }) => {
         </div>
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center p-4 space-y-4">
-          <Upload className="w-12 h-12 text-primary animate-float" />
+          <Upload className="w-12 h-12 text-accent animate-float" />
           <div className="text-center space-y-2">
             <p className="text-fashion-text font-medium">
               Drag & drop your image here
