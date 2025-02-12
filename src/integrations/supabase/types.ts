@@ -65,6 +65,50 @@ export type Database = {
         }
         Relationships: []
       }
+      user_llm_settings: {
+        Row: {
+          claude_key: boolean | null
+          created_at: string
+          deepseek_key: boolean | null
+          gemini_key: boolean | null
+          id: string
+          openai_key: boolean | null
+          selected_model: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          claude_key?: boolean | null
+          created_at?: string
+          deepseek_key?: boolean | null
+          gemini_key?: boolean | null
+          id?: string
+          openai_key?: boolean | null
+          selected_model?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          claude_key?: boolean | null
+          created_at?: string
+          deepseek_key?: boolean | null
+          gemini_key?: boolean | null
+          id?: string
+          openai_key?: boolean | null
+          selected_model?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_llm_settings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

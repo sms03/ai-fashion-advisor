@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import LLMSettings from '@/components/LLMSettings';
 
 interface Conversation {
   id: string;
@@ -75,6 +76,12 @@ const Profile = () => {
             </div>
           </div>
           <Button onClick={handleSignOut} variant="outline">Sign Out</Button>
+        </div>
+
+        {/* LLM Settings */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold text-fashion-text">AI Model Settings</h2>
+          <LLMSettings />
         </div>
 
         {/* Conversation History */}
