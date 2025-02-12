@@ -25,15 +25,15 @@ const ScenarioInput: React.FC<ScenarioInputProps> = ({ onScenarioSubmit }) => {
           className="w-full min-h-[120px] p-4 rounded-lg border border-fashion-border
             focus:border-accent focus:ring-2 focus:ring-accent/10
             transition-all duration-300 ease-in-out
-            bg-fashion-input
+            bg-white/70 backdrop-blur-sm
             placeholder:text-fashion-muted text-fashion-text resize-none"
         />
       </div>
       <button
         type="submit"
-        className="w-full py-3 px-6 rounded-lg bg-accent text-white font-medium
+        className="w-full py-3 px-6 rounded-lg bg-accent/90 backdrop-blur-sm text-white font-medium
           transform transition-all duration-300 ease-in-out
-          hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98]
+          hover:bg-accent hover:scale-[1.02] active:scale-[0.98]
           disabled:opacity-50 disabled:cursor-not-allowed"
         disabled={!scenario.trim()}
       >

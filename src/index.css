@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -98,4 +99,59 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+}
+
+.gradient-bg {
+  background: linear-gradient(
+    45deg,
+    #F2FCE2,
+    #FEF7CD,
+    #FFDEE2,
+    #E5DEFF,
+    #D3E4FD
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite, breathe 8s ease-in-out infinite;
+}
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-reveal-delay-1 {
+  transition-delay: 0.2s;
+}
+
+.scroll-reveal-delay-2 {
+  transition-delay: 0.4s;
 }
