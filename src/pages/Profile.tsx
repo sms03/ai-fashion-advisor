@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import LLMSettings from '@/components/LLMSettings';
+import ProfileEditor from '@/components/ProfileEditor';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Conversation {
@@ -15,11 +16,22 @@ interface Conversation {
   created_at: string;
 }
 
+interface Profile {
+  first_name: string;
+  last_name: string;
+  username: string;
+}
+
 const Profile = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [userEmail, setUserEmail] = useState<string | undefined>();
+  const [profile, setProfile] = useState<Profile>({
+    first_name: '',
+    last_name: '',
+    username: '',
+  });
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -30,7 +42,10 @@ const Profile = () => {
         return;
       }
       setUserEmail(session.user.email);
-      fetchConversations();
+      await Promise.all([
+        fetchConversations(),
+        fetchProfile(),
+      ]);
     };
 
     checkUser();
@@ -47,6 +62,22 @@ const Profile = () => {
       setConversations(data || []);
     } catch (error: any) {
       console.error('Error fetching conversations:', error.message);
+    }
+  };
+
+  const fetchProfile = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('first_name, last_name, username')
+        .single();
+
+      if (error) throw error;
+      if (data) {
+        setProfile(data);
+      }
+    } catch (error: any) {
+      console.error('Error fetching profile:', error.message);
     } finally {
       setLoading(false);
     }
@@ -55,6 +86,13 @@ const Profile = () => {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate('/auth');
+  };
+
+  const getDisplayName = () => {
+    if (profile.first_name || profile.last_name) {
+      return `${profile.first_name} ${profile.last_name}`.trim();
+    }
+    return profile.username || userEmail;
   };
 
   if (loading) {
@@ -69,15 +107,18 @@ const Profile = () => {
           <div className={`flex ${isMobile ? 'flex-col items-center space-y-4' : 'items-center justify-between'}`}>
             <div className="flex items-center space-x-4">
               <Avatar className="h-12 w-12 sm:h-16 sm:w-16">
-                <AvatarImage src="" alt={userEmail} />
+                <AvatarImage src="" alt={getDisplayName()} />
                 <AvatarFallback>
-                  {userEmail?.[0]?.toUpperCase() || 'U'}
+                  {getDisplayName()?.[0]?.toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold text-fashion-text break-all">
-                  {userEmail}
+                  {getDisplayName()}
                 </h1>
+                {userEmail && userEmail !== profile.username && (
+                  <p className="text-sm text-fashion-muted">{userEmail}</p>
+                )}
               </div>
             </div>
             <Button 
@@ -88,6 +129,15 @@ const Profile = () => {
               Sign Out
             </Button>
           </div>
+        </div>
+
+        {/* Profile Editor */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 space-y-4">
+          <h2 className="text-lg sm:text-xl font-semibold text-fashion-text">Edit Profile</h2>
+          <ProfileEditor 
+            initialData={profile}
+            onUpdate={fetchProfile}
+          />
         </div>
 
         {/* LLM Settings */}
