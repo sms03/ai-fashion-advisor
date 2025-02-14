@@ -1,4 +1,7 @@
 
-[projects.wpcuokpoumytvtcfgsbe]
-[projects.wpcuokpoumytvtcfgsbe.functions.python_handler]
+[global]
+project_id = "wpcuokpoumytvtcfgsbe"
+
+[functions.python_handler]
 verify_jwt = false
+
