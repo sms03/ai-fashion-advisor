@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -99,6 +98,7 @@ const LLMSettings = () => {
       toast({
         title: "Success",
         description: `API key ${currentValue ? 'removed' : 'configured'} successfully`,
+        duration: 3000,
       });
     } catch (error: any) {
       toast({
@@ -114,7 +114,7 @@ const LLMSettings = () => {
   }
 
   return (
-    <Card className="relative z-10">
+    <Card className="relative z-10 overflow-visible">
       <CardHeader>
         <CardTitle>AI Model Settings</CardTitle>
         <CardDescription>Configure your AI model preferences and API keys</CardDescription>
@@ -126,10 +126,14 @@ const LLMSettings = () => {
             value={settings?.selected_model || 'openai'}
             onValueChange={handleModelChange}
           >
-            <SelectTrigger id="model-select" className="bg-white">
+            <SelectTrigger id="model-select" className="bg-white border-2 hover:bg-gray-50 transition-colors">
               <SelectValue placeholder="Select a model" />
             </SelectTrigger>
-            <SelectContent className="bg-white border shadow-lg z-50">
+            <SelectContent
+              position="popper"
+              className="bg-white border-2 shadow-xl z-[100] min-w-[200px]"
+              align="start"
+            >
               <SelectItem value="openai">OpenAI</SelectItem>
               <SelectItem value="gemini">Google Gemini</SelectItem>
               <SelectItem value="deepseek">DeepSeek</SelectItem>
@@ -139,65 +143,34 @@ const LLMSettings = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Button
-            variant={settings?.openai_key ? "secondary" : "outline"}
-            className="w-full relative group"
-            onClick={() => handleKeyConfiguration('openai')}
-          >
-            {settings?.openai_key ? (
-              <Lock className="mr-2 h-4 w-4 transition-opacity group-hover:opacity-0" />
-            ) : (
-              <Unlock className="mr-2 h-4 w-4 transition-opacity group-hover:opacity-0" />
-            )}
-            <Lock className={`mr-2 h-4 w-4 absolute left-4 transition-opacity ${settings?.openai_key ? 'opacity-0 group-hover:opacity-100' : 'opacity-0'}`} />
-            <Unlock className={`mr-2 h-4 w-4 absolute left-4 transition-opacity ${!settings?.openai_key ? 'opacity-0 group-hover:opacity-100' : 'opacity-0'}`} />
-            OpenAI API Key
-          </Button>
-
-          <Button
-            variant={settings?.gemini_key ? "secondary" : "outline"}
-            className="w-full relative group"
-            onClick={() => handleKeyConfiguration('gemini')}
-          >
-            {settings?.gemini_key ? (
-              <Lock className="mr-2 h-4 w-4 transition-opacity group-hover:opacity-0" />
-            ) : (
-              <Unlock className="mr-2 h-4 w-4 transition-opacity group-hover:opacity-0" />
-            )}
-            <Lock className={`mr-2 h-4 w-4 absolute left-4 transition-opacity ${settings?.gemini_key ? 'opacity-0 group-hover:opacity-100' : 'opacity-0'}`} />
-            <Unlock className={`mr-2 h-4 w-4 absolute left-4 transition-opacity ${!settings?.gemini_key ? 'opacity-0 group-hover:opacity-100' : 'opacity-0'}`} />
-            Gemini API Key
-          </Button>
-
-          <Button
-            variant={settings?.deepseek_key ? "secondary" : "outline"}
-            className="w-full relative group"
-            onClick={() => handleKeyConfiguration('deepseek')}
-          >
-            {settings?.deepseek_key ? (
-              <Lock className="mr-2 h-4 w-4 transition-opacity group-hover:opacity-0" />
-            ) : (
-              <Unlock className="mr-2 h-4 w-4 transition-opacity group-hover:opacity-0" />
-            )}
-            <Lock className={`mr-2 h-4 w-4 absolute left-4 transition-opacity ${settings?.deepseek_key ? 'opacity-0 group-hover:opacity-100' : 'opacity-0'}`} />
-            <Unlock className={`mr-2 h-4 w-4 absolute left-4 transition-opacity ${!settings?.deepseek_key ? 'opacity-0 group-hover:opacity-100' : 'opacity-0'}`} />
-            DeepSeek API Key
-          </Button>
-
-          <Button
-            variant={settings?.claude_key ? "secondary" : "outline"}
-            className="w-full relative group"
-            onClick={() => handleKeyConfiguration('claude')}
-          >
-            {settings?.claude_key ? (
-              <Lock className="mr-2 h-4 w-4 transition-opacity group-hover:opacity-0" />
-            ) : (
-              <Unlock className="mr-2 h-4 w-4 transition-opacity group-hover:opacity-0" />
-            )}
-            <Lock className={`mr-2 h-4 w-4 absolute left-4 transition-opacity ${settings?.claude_key ? 'opacity-0 group-hover:opacity-100' : 'opacity-0'}`} />
-            <Unlock className={`mr-2 h-4 w-4 absolute left-4 transition-opacity ${!settings?.claude_key ? 'opacity-0 group-hover:opacity-100' : 'opacity-0'}`} />
-            Claude API Key
-          </Button>
+          {[
+            { key: 'openai', label: 'OpenAI API Key' },
+            { key: 'gemini', label: 'Gemini API Key' },
+            { key: 'deepseek', label: 'DeepSeek API Key' },
+            { key: 'claude', label: 'Claude API Key' },
+          ].map((item) => (
+            <Button
+              key={item.key}
+              variant={settings?.[`${item.key}_key` as keyof LLMSettings] ? "secondary" : "outline"}
+              className="w-full relative group hover:shadow-md transition-all duration-200 border-2"
+              onClick={() => handleKeyConfiguration(item.key)}
+            >
+              <div className="absolute left-4 w-6 h-6 flex items-center justify-center">
+                {settings?.[`${item.key}_key` as keyof LLMSettings] ? (
+                  <>
+                    <Lock className="absolute transition-all duration-200 group-hover:scale-0" />
+                    <Unlock className="absolute transition-all duration-200 scale-0 group-hover:scale-100" />
+                  </>
+                ) : (
+                  <>
+                    <Unlock className="absolute transition-all duration-200 group-hover:scale-0" />
+                    <Lock className="absolute transition-all duration-200 scale-0 group-hover:scale-100" />
+                  </>
+                )}
+              </div>
+              <span className="ml-8">{item.label}</span>
+            </Button>
+          ))}
         </div>
       </CardContent>
     </Card>
