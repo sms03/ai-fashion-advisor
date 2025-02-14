@@ -47,7 +47,13 @@ const LLMSettings = () => {
         .single();
 
       if (error) throw error;
-      setSettings(data as LLMSettings);
+      
+      // Ensure selected_model is a valid ModelType
+      const selectedModel = data?.selected_model || 'openai';
+      setSettings({
+        ...data,
+        selected_model: selectedModel as ModelType
+      } as LLMSettings);
     } catch (error: any) {
       console.error('Error fetching settings:', error.message);
     } finally {
@@ -158,6 +164,8 @@ const LLMSettings = () => {
     return <div>Loading settings...</div>;
   }
 
+  const selectedModel: ModelType = settings?.selected_model || 'openai';
+
   return (
     <Card className="relative z-10 overflow-visible">
       <CardHeader>
@@ -168,7 +176,7 @@ const LLMSettings = () => {
         <div className="space-y-2">
           <Label htmlFor="model-select">Selected Model</Label>
           <Select
-            value={settings?.selected_model || 'openai'}
+            value={selectedModel}
             onValueChange={handleModelChange}
           >
             <SelectTrigger id="model-select" className="bg-white border-2 hover:bg-gray-50 transition-colors">
@@ -222,7 +230,7 @@ const LLMSettings = () => {
                   />
                 </div>
                 <Button
-                  variant={(settings?.[`${item.key}_key` as keyof LLMSettings] ? "secondary" : "outline") as "secondary" | "outline"}
+                  variant={settings?.[`${item.key}_key` as keyof LLMSettings] ? "secondary" : "outline"}
                   className="relative group hover:shadow-md transition-all duration-200 border-2 w-20"
                   onClick={() => handleKeyConfiguration(item.key)}
                 >
