@@ -33,8 +33,16 @@ const Profile = () => {
     username: '',
   });
   const isMobile = useIsMobile();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
@@ -49,9 +57,10 @@ const Profile = () => {
     };
 
     checkUser();
-  }, [navigate]);
+  }, [mounted, navigate]);
 
   const fetchConversations = async () => {
+    if (!mounted) return;
     try {
       const { data, error } = await supabase
         .from('conversations')
@@ -66,6 +75,7 @@ const Profile = () => {
   };
 
   const fetchProfile = async () => {
+    if (!mounted) return;
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -95,7 +105,7 @@ const Profile = () => {
     return profile.username || userEmail;
   };
 
-  if (loading) {
+  if (!mounted || loading) {
     return <div className="min-h-screen gradient-bg flex items-center justify-center">Loading...</div>;
   }
 
