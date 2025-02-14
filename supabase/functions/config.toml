@@ -1,0 +1,4 @@
+
+[projects.wpcuokpoumytvtcfgsbe]
+[projects.wpcuokpoumytvtcfgsbe.functions.python_handler]
+verify_jwt = false

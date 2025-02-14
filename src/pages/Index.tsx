@@ -7,6 +7,7 @@ import { Camera, Sparkles, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
+import { callPythonBackend } from '@/utils/pythonApi';
 
 const Index = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -43,9 +44,26 @@ const Index = () => {
       return;
     }
 
-    // Here you would handle the image upload and API call
-    console.log('Scenario:', scenario);
-    console.log('Image:', selectedImage);
+    try {
+      // Call Python backend
+      const response = await callPythonBackend({
+        scenario,
+        hasImage: !!selectedImage
+      });
+
+      console.log('Python backend response:', response);
+      
+      toast({
+        title: "Success",
+        description: "Successfully connected to Python backend!",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   useEffect(() => {
