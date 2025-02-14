@@ -222,7 +222,7 @@ const LLMSettings = () => {
                   />
                 </div>
                 <Button
-                  variant={settings?.[`${item.key}_key` as keyof LLMSettings] ? "secondary" : "outline"}
+                  variant={(settings?.[`${item.key}_key` as keyof LLMSettings] ? "secondary" : "outline") as "secondary" | "outline"}
                   className="relative group hover:shadow-md transition-all duration-200 border-2 w-20"
                   onClick={() => handleKeyConfiguration(item.key)}
                 >
