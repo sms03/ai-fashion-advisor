@@ -15,12 +15,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Lock, Unlock, Eye, EyeOff } from 'lucide-react';
 
+type ModelType = 'openai' | 'gemini' | 'deepseek' | 'claude';
+
 interface LLMSettings {
   openai_key: boolean;
   gemini_key: boolean;
   deepseek_key: boolean;
   claude_key: boolean;
-  selected_model: string;
+  selected_model: ModelType;
   openai_api_key: string | null;
   gemini_api_key: string | null;
   deepseek_api_key: string | null;
@@ -45,7 +47,7 @@ const LLMSettings = () => {
         .single();
 
       if (error) throw error;
-      setSettings(data);
+      setSettings(data as LLMSettings);
     } catch (error: any) {
       console.error('Error fetching settings:', error.message);
     } finally {
@@ -53,7 +55,7 @@ const LLMSettings = () => {
     }
   };
 
-  const handleModelChange = async (model: string) => {
+  const handleModelChange = async (model: ModelType) => {
     try {
       const { error } = await supabase
         .from('user_llm_settings')
@@ -166,7 +168,7 @@ const LLMSettings = () => {
         <div className="space-y-2">
           <Label htmlFor="model-select">Selected Model</Label>
           <Select
-            value={String(settings?.selected_model || 'openai')}
+            value={settings?.selected_model || 'openai'}
             onValueChange={handleModelChange}
           >
             <SelectTrigger id="model-select" className="bg-white border-2 hover:bg-gray-50 transition-colors">
