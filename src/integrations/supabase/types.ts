@@ -73,33 +73,45 @@ export type Database = {
       }
       user_llm_settings: {
         Row: {
+          claude_api_key: string | null
           claude_key: boolean | null
           created_at: string
+          deepseek_api_key: string | null
           deepseek_key: boolean | null
+          gemini_api_key: string | null
           gemini_key: boolean | null
           id: string
+          openai_api_key: string | null
           openai_key: boolean | null
           selected_model: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          claude_api_key?: string | null
           claude_key?: boolean | null
           created_at?: string
+          deepseek_api_key?: string | null
           deepseek_key?: boolean | null
+          gemini_api_key?: string | null
           gemini_key?: boolean | null
           id?: string
+          openai_api_key?: string | null
           openai_key?: boolean | null
           selected_model?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          claude_api_key?: string | null
           claude_key?: boolean | null
           created_at?: string
+          deepseek_api_key?: string | null
           deepseek_key?: boolean | null
+          gemini_api_key?: string | null
           gemini_key?: boolean | null
           id?: string
+          openai_api_key?: string | null
           openai_key?: boolean | null
           selected_model?: string | null
           updated_at?: string
