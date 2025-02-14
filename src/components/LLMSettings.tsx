@@ -223,7 +223,7 @@ const LLMSettings = () => {
                   <Input
                     id={`${item.key}-api-key`}
                     type={showApiKey[item.key] ? "text" : "password"}
-                    value={settings?.[`${item.key}_api_key` as keyof LLMSettings] || ''}
+                    value={String(settings?.[`${item.key}_api_key` as keyof LLMSettings] || '')}
                     onChange={(e) => handleApiKeyChange(item.key, e.target.value)}
                     className="w-full"
                     placeholder={`Enter your ${item.label}`}
