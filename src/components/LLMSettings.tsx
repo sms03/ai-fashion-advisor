@@ -166,7 +166,7 @@ const LLMSettings = () => {
         <div className="space-y-2">
           <Label htmlFor="model-select">Selected Model</Label>
           <Select
-            value={settings?.selected_model || 'openai'}
+            value={String(settings?.selected_model || 'openai')}
             onValueChange={handleModelChange}
           >
             <SelectTrigger id="model-select" className="bg-white border-2 hover:bg-gray-50 transition-colors">
