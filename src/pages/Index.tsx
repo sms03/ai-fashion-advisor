@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ImageUploader from '../components/ImageUploader';
@@ -94,17 +93,20 @@ const Index = () => {
       <nav className="absolute top-0 right-0 p-4">
         {session ? (
           <div className="flex items-center gap-4">
-            <Button variant="outline" asChild>
-              <Link to="/profile">
-                <User className="w-4 h-4 mr-2" />
-                Profile
-              </Link>
+            <Button variant="outline" onClick={() => navigate('/profile')}>
+              <User className="w-4 h-4 mr-2" />
+              Profile
             </Button>
           </div>
         ) : (
-          <Button variant="outline" asChild>
-            <Link to="/auth">Sign In</Link>
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button variant="outline" asChild>
+              <Link to="/auth?mode=login">Login</Link>
+            </Button>
+            <Button variant="default" asChild>
+              <Link to="/auth?mode=signup">Sign Up</Link>
+            </Button>
+          </div>
         )}
       </nav>
 
