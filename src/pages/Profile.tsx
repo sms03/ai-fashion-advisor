@@ -134,7 +134,7 @@ const Profile = () => {
             <Button 
               onClick={handleSignOut} 
               variant="outline"
-              className="w-full sm:w-auto mt-4 sm:mt-0"
+              className="w-full sm:w-auto mt-4 sm:mt-0 bg-[#F1F0FB] text-[#1B1B1B] hover:bg-[#E5E4F5] border-[#E5E5E5]"
             >
               Sign Out
             </Button>
