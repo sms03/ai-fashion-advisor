@@ -146,7 +146,7 @@ const ProfileEditor = ({ initialData, onUpdate }: ProfileEditorProps) => {
       <Button 
         onClick={updateProfile} 
         disabled={loading}
-        className="w-full"
+        className="w-full bg-[#F2FCE2] text-[#1B1B1B] hover:bg-[#E5F0D5] border-[#E5E5E5]"
       >
         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Update Profile
@@ -181,7 +181,7 @@ const ProfileEditor = ({ initialData, onUpdate }: ProfileEditorProps) => {
             onClick={updatePassword} 
             disabled={loading}
             variant="outline"
-            className="w-full"
+            className="w-full bg-[#F1F0FB] text-[#1B1B1B] hover:bg-[#E5E4F5] border-[#E5E5E5]"
           >
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Update Password
