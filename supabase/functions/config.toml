@@ -4,4 +4,3 @@ project_id = "wpcuokpoumytvtcfgsbe"
 
 [functions.python_handler]
 verify_jwt = false
-

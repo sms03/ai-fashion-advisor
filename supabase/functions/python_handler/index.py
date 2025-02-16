@@ -24,6 +24,9 @@ def handle_request(event: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, 
         # Parse the request body
         body = json.loads(event.get('body', '{}'))
         
+        # Log the received data for debugging
+        print(f"Received request with body: {body}")
+        
         # Your Python logic here
         result = {
             "message": "Hello from Python!",
@@ -42,4 +45,3 @@ def handle_request(event: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, 
             "headers": cors_headers,
             "body": json.dumps({"error": str(e)})
         }
-
