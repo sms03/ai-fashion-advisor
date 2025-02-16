@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ImageUploader from '../components/ImageUploader';
 import ScenarioInput from '../components/ScenarioInput';
-import { Camera, Sparkles, User } from 'lucide-react';
+import { Camera, Sparkles, User, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
@@ -35,11 +35,25 @@ const Dashboard = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const trendingPrompts = [
+  const popularPrompts = [
     "What should I wear to a summer wedding?",
     "Help me style a business casual outfit",
     "Recommend an outfit for a first date",
     "What's trending in streetwear right now?",
+  ];
+
+  const trendingPrompts = [
+    "Create a capsule wardrobe for fall",
+    "Style tips for a beach vacation",
+    "Office wear inspiration for summer",
+    "How to mix patterns in outfits",
+  ];
+
+  const quickStartPrompts = [
+    "Analyze my outfit for a job interview",
+    "Suggest accessories for this look",
+    "Help me color coordinate this outfit",
+    "Make this outfit more casual",
   ];
 
   const handleImageSelect = (file: File) => {
@@ -83,9 +97,10 @@ const Dashboard = () => {
       </nav>
 
       {/* Main Content */}
-      <section className="max-w-3xl mx-auto px-4 pt-24 pb-24 space-y-12">
-        <div className="space-y-12">
-          <div className="scroll-reveal space-y-6">
+      <div className="container mx-auto px-4 pt-24 pb-24">
+        <div className="max-w-4xl mx-auto space-y-12">
+          {/* Upload Section */}
+          <section className="space-y-6">
             <div className="flex items-center space-x-3 text-fashion-text">
               <Camera className="w-5 h-5 text-accent" />
               <h2 className="text-xl font-semibold tracking-tight">Upload Your Photo</h2>
@@ -93,32 +108,71 @@ const Dashboard = () => {
             <div className="bg-white/50 backdrop-blur-sm p-6 rounded-xl">
               <ImageUploader onImageSelect={handleImageSelect} />
             </div>
-          </div>
+          </section>
 
-          <div className="scroll-reveal space-y-6">
-            <h2 className="text-xl font-semibold text-fashion-text tracking-tight">
-              Describe Your Scenario
-            </h2>
-            <div className="bg-white/50 backdrop-blur-sm p-6 rounded-xl">
-              <div className="mb-6">
-                <h3 className="text-sm font-medium text-fashion-text mb-3">Trending Prompts:</h3>
-                <div className="flex flex-wrap gap-2">
-                  {trendingPrompts.map((prompt, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleScenarioSubmit(prompt)}
-                      className="px-3 py-1.5 rounded-full bg-[#F1F0FB] text-[#1B1B1B] hover:bg-[#E5E4F5] text-sm transition-colors"
-                    >
-                      {prompt}
-                    </button>
-                  ))}
-                </div>
+          {/* Prompts Sections */}
+          <section className="space-y-8">
+            <div className="flex items-center space-x-3 text-fashion-text">
+              <Sparkles className="w-5 h-5 text-accent" />
+              <h2 className="text-xl font-semibold tracking-tight">Fashion Prompts</h2>
+            </div>
+
+            {/* Popular Prompts */}
+            <div className="bg-white/50 backdrop-blur-sm p-6 rounded-xl space-y-4">
+              <h3 className="text-lg font-medium text-fashion-text">Popular Prompts</h3>
+              <div className="flex flex-wrap gap-2">
+                {popularPrompts.map((prompt, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleScenarioSubmit(prompt)}
+                    className="px-4 py-2 rounded-full bg-[#F1F0FB] text-[#1B1B1B] hover:bg-[#E5E4F5] text-sm transition-colors"
+                  >
+                    {prompt}
+                  </button>
+                ))}
               </div>
+            </div>
+
+            {/* Trending Prompts */}
+            <div className="bg-white/50 backdrop-blur-sm p-6 rounded-xl space-y-4">
+              <h3 className="text-lg font-medium text-fashion-text">Trending Now</h3>
+              <div className="flex flex-wrap gap-2">
+                {trendingPrompts.map((prompt, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleScenarioSubmit(prompt)}
+                    className="px-4 py-2 rounded-full bg-[#FEF7CD] text-[#1B1B1B] hover:bg-[#FCF0B0] text-sm transition-colors"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Start Prompts */}
+            <div className="bg-white/50 backdrop-blur-sm p-6 rounded-xl space-y-4">
+              <h3 className="text-lg font-medium text-fashion-text">Quick Start</h3>
+              <div className="flex flex-wrap gap-2">
+                {quickStartPrompts.map((prompt, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleScenarioSubmit(prompt)}
+                    className="px-4 py-2 rounded-full bg-[#F2FCE2] text-[#1B1B1B] hover:bg-[#E5F0D5] text-sm transition-colors"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Custom Prompt Input */}
+            <div className="bg-white/50 backdrop-blur-sm p-6 rounded-xl">
+              <h3 className="text-lg font-medium text-fashion-text mb-4">Custom Prompt</h3>
               <ScenarioInput onScenarioSubmit={handleScenarioSubmit} />
             </div>
-          </div>
+          </section>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

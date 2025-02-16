@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Camera, Zap, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -18,17 +18,27 @@ const Index = () => {
 
   const features = [
     {
-      title: "AI-Powered Fashion Analysis",
-      description: "Get personalized fashion advice using cutting-edge AI technology"
+      icon: <Camera className="w-6 h-6 text-accent" />,
+      title: "Visual Analysis",
+      description: "Upload your outfits for instant AI-powered fashion advice and recommendations"
     },
     {
-      title: "Visual Recognition",
-      description: "Upload your photos for detailed style recommendations"
+      icon: <Sparkles className="w-6 h-6 text-accent" />,
+      title: "Personalized Suggestions",
+      description: "Get tailored fashion recommendations based on your style preferences"
     },
     {
-      title: "Smart Suggestions",
-      description: "Receive trending and contextual fashion recommendations"
+      icon: <Palette className="w-6 h-6 text-accent" />,
+      title: "Style Guidelines",
+      description: "Access expert fashion tips and trending style combinations"
     }
+  ];
+
+  const examples = [
+    "What should I wear to a summer wedding?",
+    "Help me style a business casual outfit",
+    "Create a capsule wardrobe for fall",
+    "Style tips for a beach vacation"
   ];
 
   return (
@@ -79,17 +89,40 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section className="max-w-4xl mx-auto px-4 pb-24">
+      <section className="max-w-4xl mx-auto px-4 pb-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="scroll-reveal bg-white/50 backdrop-blur-sm p-6 rounded-xl space-y-3"
+              className="scroll-reveal bg-white/50 backdrop-blur-sm p-6 rounded-xl space-y-4"
             >
+              <div className="bg-accent/10 w-12 h-12 rounded-full flex items-center justify-center">
+                {feature.icon}
+              </div>
               <h3 className="text-xl font-semibold text-fashion-text">{feature.title}</h3>
               <p className="text-fashion-muted">{feature.description}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Example Prompts Section */}
+      <section className="max-w-4xl mx-auto px-4 pb-24">
+        <div className="bg-white/50 backdrop-blur-sm p-8 rounded-xl space-y-6">
+          <div className="flex items-center space-x-3">
+            <Zap className="w-5 h-5 text-accent" />
+            <h2 className="text-xl font-semibold text-fashion-text">Example Prompts</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {examples.map((example, index) => (
+              <div 
+                key={index}
+                className="p-4 bg-[#F1F0FB] rounded-lg text-[#1B1B1B]"
+              >
+                "{example}"
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </div>
