@@ -1,5 +1,4 @@
-
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Sparkles, Camera, Zap, Palette, Globe, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -14,6 +13,15 @@ import {
 
 const Index = () => {
   const navigate = useNavigate();
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState('');
+
+  const fashionQuotes = [
+    "Style is a way to say who you are without having to speak",
+    "Fashion is the armor to survive everyday life",
+    "Fashion is the most powerful art there is",
+    "Fashion is about dressing according to what's fashionable; style is more about being yourself"
+  ];
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -22,6 +30,28 @@ const Index = () => {
       }
     });
   }, [navigate]);
+
+  useEffect(() => {
+    let currentText = '';
+    let currentIndex = 0;
+    
+    const typeText = () => {
+      if (currentIndex < fashionQuotes[currentQuoteIndex].length) {
+        currentText += fashionQuotes[currentQuoteIndex][currentIndex];
+        setDisplayedText(currentText);
+        currentIndex++;
+        setTimeout(typeText, 50);
+      } else {
+        setTimeout(() => {
+          setCurrentQuoteIndex((prev) => (prev + 1) % fashionQuotes.length);
+          setDisplayedText('');
+        }, 3000);
+      }
+    };
+
+    setDisplayedText('');
+    typeText();
+  }, [currentQuoteIndex]);
 
   const features = [
     {
@@ -46,65 +76,74 @@ const Index = () => {
       country: "France",
       trend: "Sustainable Luxury",
       description: "Eco-conscious haute couture and minimalist elegance",
-      color: "bg-[#F2FCE2]"
+      color: "bg-[#F2FCE2]",
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
     },
     {
       country: "Japan",
       trend: "Tech-Wear Fusion",
       description: "Modern technology meets traditional fashion elements",
-      color: "bg-[#FEF7CD]"
+      color: "bg-[#FEF7CD]",
+      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952"
     },
     {
       country: "Italy",
       trend: "Artisanal Revival",
       description: "Handcrafted details and traditional craftsmanship",
-      color: "bg-[#FFDEE2]"
+      color: "bg-[#FFDEE2]",
+      image: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843"
     },
     {
       country: "South Korea",
       trend: "Street Style Evolution",
       description: "Bold colors and innovative layering techniques",
-      color: "bg-[#E5DEFF]"
+      color: "bg-[#E5DEFF]",
+      image: "https://images.unsplash.com/photo-1500673922987-e212871fec22"
     },
     {
       country: "USA",
       trend: "Comfort Luxury",
       description: "Elevated casual wear with premium materials",
-      color: "bg-[#D3E4FD]"
+      color: "bg-[#D3E4FD]",
+      image: "https://images.unsplash.com/photo-1466721591366-2d5fba72006d"
     }
   ];
 
   return (
     <div className="min-h-screen gradient-bg overflow-hidden">
-      {/* Navigation */}
-      <nav className="absolute top-0 right-0 p-4">
+      <div className="absolute top-0 left-0 w-full text-center p-4 bg-black/5 backdrop-blur-sm">
+        <p className="font-playfair text-xl text-fashion-text h-8">
+          {displayedText}
+        </p>
+      </div>
+
+      <nav className="absolute top-12 right-0 p-4">
         <div className="flex items-center gap-4">
           <Button 
             variant="outline" 
-            asChild
+            onClick={() => navigate('/about')}
             className="bg-[#F1F0FB] text-[#1B1B1B] hover:bg-[#E5E4F5] border-[#E5E5E5]"
           >
-            <Link to="/about">About Us</Link>
+            About Us
           </Button>
           <Button 
             variant="outline" 
-            asChild
+            onClick={() => navigate('/auth?mode=login')}
             className="bg-[#F1F0FB] text-[#1B1B1B] hover:bg-[#E5E4F5] border-[#E5E5E5]"
           >
-            <Link to="/auth?mode=login">Sign In</Link>
+            Sign In
           </Button>
           <Button 
             variant="default" 
-            asChild
+            onClick={() => navigate('/auth?mode=signup')}
             className="bg-[#FEF7CD] text-[#1B1B1B] hover:bg-[#FCF0B0] border-[#E5E5E5]"
           >
-            <Link to="/auth?mode=signup">Sign Up</Link>
+            Sign Up
           </Button>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative py-24 px-4">
+      <section className="relative py-32 px-4">
         <div className="max-w-3xl mx-auto text-center space-y-8">
           <div className="scroll-reveal inline-flex items-center justify-center px-4 py-2 
             bg-white/80 backdrop-blur-sm rounded-full text-fashion-text mb-4 border border-fashion-border">
@@ -128,7 +167,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Worldwide Trends Section */}
       <section className="max-w-5xl mx-auto px-4 pb-16">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center px-4 py-2 
@@ -144,8 +182,17 @@ const Index = () => {
           <CarouselContent>
             {worldwideTrends.map((trend, index) => (
               <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                <div className={`${trend.color} p-6 rounded-xl h-full`}>
+                <div 
+                  className={`${trend.color} p-6 rounded-xl h-full transform transition-all duration-300 hover:scale-105 bg-opacity-80 backdrop-blur-sm`}
+                >
                   <div className="space-y-4">
+                    <div className="h-48 rounded-lg overflow-hidden">
+                      <img 
+                        src={trend.image} 
+                        alt={`${trend.country} fashion trend`}
+                        className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
+                      />
+                    </div>
                     <h3 className="text-xl font-semibold text-fashion-text">{trend.country}</h3>
                     <div className="text-lg font-medium text-fashion-text">{trend.trend}</div>
                     <p className="text-fashion-muted">{trend.description}</p>
@@ -159,7 +206,6 @@ const Index = () => {
         </Carousel>
       </section>
 
-      {/* Features Section */}
       <section className="max-w-4xl mx-auto px-4 pb-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
@@ -177,7 +223,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Call to Action */}
       <section className="max-w-4xl mx-auto px-4 pb-24">
         <div className="bg-white/50 backdrop-blur-sm p-8 rounded-xl text-center space-y-6">
           <h2 className="text-2xl font-semibold text-fashion-text">Ready to Transform Your Style?</h2>
