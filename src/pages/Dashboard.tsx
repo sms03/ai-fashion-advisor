@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
-import { ImageUploader } from '@/components/ImageUploader';
-import { ScenarioInput } from '@/components/ScenarioInput';
+import ImageUploader from '@/components/ImageUploader';
+import ScenarioInput from '@/components/ScenarioInput';
 
 const Dashboard = () => {
   return (
@@ -15,8 +15,8 @@ const Dashboard = () => {
               AI Fashion Advisor
             </h1>
             <div className="space-y-6">
-              <ImageUploader />
-              <ScenarioInput />
+              <ImageUploader onImageSelect={(file) => console.log(file)} />
+              <ScenarioInput onScenarioSubmit={(scenario) => console.log(scenario)} />
             </div>
           </div>
         </div>

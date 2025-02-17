@@ -51,6 +51,7 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          theme_preference: string | null
           username: string | null
         }
         Insert: {
@@ -59,6 +60,7 @@ export type Database = {
           first_name?: string | null
           id: string
           last_name?: string | null
+          theme_preference?: string | null
           username?: string | null
         }
         Update: {
@@ -67,6 +69,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          theme_preference?: string | null
           username?: string | null
         }
         Relationships: []
