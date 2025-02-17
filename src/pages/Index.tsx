@@ -2,12 +2,12 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { FashionQuotes } from '@/components/home/FashionQuotes';
 import { Navigation } from '@/components/home/Navigation';
 import { HeroSection } from '@/components/home/HeroSection';
 import { WorldwideTrends } from '@/components/home/WorldwideTrends';
 import { Features } from '@/components/home/Features';
 import { CallToAction } from '@/components/home/CallToAction';
+import { TypingHeading } from '@/components/home/TypingHeading';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen gradient-bg overflow-hidden">
-      <FashionQuotes />
+      <TypingHeading />
       <Navigation />
       <HeroSection />
       <WorldwideTrends />

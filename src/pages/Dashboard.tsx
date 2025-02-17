@@ -1,13 +1,26 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
 import ImageUploader from '@/components/ImageUploader';
 import ScenarioInput from '@/components/ScenarioInput';
+import { Button } from '@/components/ui/button';
+import { UserRound } from 'lucide-react';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen gradient-bg">
       <DashboardSidebar />
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute right-4 top-4"
+        onClick={() => navigate('/profile')}
+      >
+        <UserRound className="h-6 w-6" />
+      </Button>
       <main className="p-4 sm:p-6 lg:p-8 pt-20">
         <div className="max-w-4xl mx-auto space-y-8">
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6">
