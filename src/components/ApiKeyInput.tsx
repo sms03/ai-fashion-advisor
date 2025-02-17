@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Lock, Unlock, Eye, EyeOff } from 'lucide-react';
+import { Lock, Unlock, Eye, EyeOff, ExternalLink } from 'lucide-react';
 import { LLMSettings } from '@/types/llm-settings';
 
 interface ApiKeyInputProps {
@@ -13,6 +13,16 @@ interface ApiKeyInputProps {
   onKeyConfiguration: (provider: string) => void;
 }
 
+const getApiKeyLink = (provider: string) => {
+  const links: Record<string, string> = {
+    openai: 'https://platform.openai.com/api-keys',
+    gemini: 'https://makersuite.google.com/app/apikey',
+    deepseek: 'https://platform.deepseek.com/api',
+    claude: 'https://console.anthropic.com/account/keys'
+  };
+  return links[provider] || '#';
+};
+
 export const ApiKeyInput = ({ 
   item, 
   settings, 
@@ -20,6 +30,7 @@ export const ApiKeyInput = ({
   onKeyConfiguration 
 }: ApiKeyInputProps) => {
   const [showApiKey, setShowApiKey] = useState(false);
+  const apiKeyLink = getApiKeyLink(item.key);
 
   return (
     <div className="space-y-2">
@@ -69,6 +80,14 @@ export const ApiKeyInput = ({
           </div>
         </Button>
       </div>
+      <a 
+        href={apiKeyLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center text-sm text-accent hover:underline mt-1"
+      >
+        Get your {item.label} <ExternalLink className="h-3 w-3 ml-1" />
+      </a>
     </div>
   );
 };
