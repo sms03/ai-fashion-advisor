@@ -8,6 +8,7 @@ import { WorldwideTrends } from '@/components/home/WorldwideTrends';
 import { Features } from '@/components/home/Features';
 import { CallToAction } from '@/components/home/CallToAction';
 import { TypingHeading } from '@/components/home/TypingHeading';
+import { Footer } from '@/components/shared/Footer';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -21,13 +22,14 @@ const Index = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen gradient-bg overflow-hidden">
+    <div className="min-h-screen gradient-bg overflow-hidden flex flex-col">
       <TypingHeading />
       <Navigation />
       <HeroSection />
       <WorldwideTrends />
       <Features />
       <CallToAction />
+      <Footer />
     </div>
   );
 };

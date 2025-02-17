@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +6,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import LLMSettings from '@/components/LLMSettings';
 import ProfileEditor from '@/components/ProfileEditor';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Footer } from '@/components/shared/Footer';
 
 interface Conversation {
   id: string;
@@ -110,7 +110,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen gradient-bg p-2 sm:p-4">
+    <div className="min-h-screen gradient-bg flex flex-col">
       <div className="max-w-4xl mx-auto space-y-4 sm:space-y-8">
         {/* Profile Header */}
         <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6">
@@ -191,6 +191,7 @@ const Profile = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

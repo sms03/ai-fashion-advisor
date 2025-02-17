@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -6,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import { Footer } from '@/components/shared/Footer';
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -65,7 +65,7 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen gradient-bg flex items-center justify-center p-4">
+    <div className="min-h-screen gradient-bg flex flex-col">
       <div className="w-full max-w-md space-y-8 bg-white/80 backdrop-blur-sm p-6 rounded-xl">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-fashion-text">
@@ -124,6 +124,7 @@ const Auth = () => {
           </Button>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
