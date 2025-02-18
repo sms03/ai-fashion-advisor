@@ -82,7 +82,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-playfair;
   }
 }
 
@@ -133,6 +133,10 @@
   );
   background-color: black;
   box-shadow: 0 0 20px rgba(242, 252, 226, 0.1);
+}
+
+.animate-gradient-shift {
+  animation: gradient-shift 4s ease infinite;
 }
 
 .scroll-reveal {
