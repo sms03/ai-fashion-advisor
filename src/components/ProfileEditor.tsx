@@ -11,6 +11,7 @@ interface ProfileData {
   first_name: string;
   last_name: string;
   username: string;
+  email?: string;
 }
 
 interface ProfileEditorProps {
@@ -21,32 +22,44 @@ interface ProfileEditorProps {
 const ProfileEditor = ({ initialData, onUpdate }: ProfileEditorProps) => {
   const [formData, setFormData] = useState<ProfileData>(initialData);
   const [loading, setLoading] = useState(false);
-  const [passwordData, setPasswordData] = useState({
-    password: '',
-    confirmPassword: '',
-  });
+  const [usernameError, setUsernameError] = useState('');
   const { toast } = useToast();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
-  };
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setPasswordData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    if (name === 'username' && value !== initialData.username) {
+      const { data } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('username', value)
+        .single();
+
+      if (data) {
+        setUsernameError('This username is already taken');
+      } else {
+        setUsernameError('');
+      }
+    }
   };
 
   const updateProfile = async () => {
+    if (usernameError) {
+      toast({
+        title: "Error",
+        description: "Please choose a different username",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setLoading(true);
-      const { error } = await supabase
+      const { error: profileError } = await supabase
         .from('profiles')
         .update({
           first_name: formData.first_name,
@@ -55,47 +68,21 @@ const ProfileEditor = ({ initialData, onUpdate }: ProfileEditorProps) => {
         })
         .eq('id', (await supabase.auth.getUser()).data.user?.id);
 
-      if (error) throw error;
+      if (profileError) throw profileError;
+
+      if (formData.email && formData.email !== initialData.email) {
+        const { error: emailError } = await supabase.auth.updateUser({
+          email: formData.email,
+        });
+
+        if (emailError) throw emailError;
+      }
 
       toast({
         title: "Success",
         description: "Profile updated successfully",
       });
       onUpdate();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updatePassword = async () => {
-    if (passwordData.password !== passwordData.confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Passwords do not match",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const { error } = await supabase.auth.updateUser({
-        password: passwordData.password
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Password updated successfully",
-      });
-      setPasswordData({ password: '', confirmPassword: '' });
     } catch (error: any) {
       toast({
         title: "Error",
@@ -118,6 +105,7 @@ const ProfileEditor = ({ initialData, onUpdate }: ProfileEditorProps) => {
             value={formData.first_name}
             onChange={handleInputChange}
             placeholder="Enter your first name"
+            className="rounded-full border-fashion-border"
           />
         </div>
         <div className="space-y-2">
@@ -128,8 +116,22 @@ const ProfileEditor = ({ initialData, onUpdate }: ProfileEditorProps) => {
             value={formData.last_name}
             onChange={handleInputChange}
             placeholder="Enter your last name"
+            className="rounded-full border-fashion-border"
           />
         </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleInputChange}
+          placeholder="Enter your email"
+          className="rounded-full border-fashion-border"
+        />
       </div>
 
       <div className="space-y-2">
@@ -140,54 +142,21 @@ const ProfileEditor = ({ initialData, onUpdate }: ProfileEditorProps) => {
           value={formData.username}
           onChange={handleInputChange}
           placeholder="Enter your username"
+          className="rounded-full border-fashion-border"
         />
+        {usernameError && (
+          <p className="text-sm text-red-500 mt-1">{usernameError}</p>
+        )}
       </div>
 
       <Button 
         onClick={updateProfile} 
-        disabled={loading}
-        className="w-full bg-[#F2FCE2] text-[#1B1B1B] hover:bg-[#E5F0D5] border-[#E5E5E5]"
+        disabled={loading || !!usernameError}
+        className="w-full rounded-full bg-[#F2FCE2] text-[#1B1B1B] hover:bg-[#E5F0D5] border-[#E5E5E5] dark:bg-[#F2FCE2]/20 dark:text-white dark:hover:bg-[#F2FCE2]/30"
       >
         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Update Profile
       </Button>
-
-      <div className="border-t pt-6 mt-6">
-        <h3 className="text-lg font-semibold mb-4">Change Password</h3>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="password">New Password</Label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              value={passwordData.password}
-              onChange={handlePasswordChange}
-              placeholder="Enter new password"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm New Password</Label>
-            <Input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              value={passwordData.confirmPassword}
-              onChange={handlePasswordChange}
-              placeholder="Confirm new password"
-            />
-          </div>
-          <Button 
-            onClick={updatePassword} 
-            disabled={loading}
-            variant="outline"
-            className="w-full bg-[#F1F0FB] text-[#1B1B1B] hover:bg-[#E5E4F5] border-[#E5E5E5]"
-          >
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Update Password
-          </Button>
-        </div>
-      </div>
     </div>
   );
 };

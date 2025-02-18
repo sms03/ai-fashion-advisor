@@ -9,7 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Footer } from '@/components/shared/Footer';
 
 const Auth = () => {
-  const [email, setEmail] = useState("");
+  const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,22 +33,55 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = isLogin
-        ? await supabase.auth.signInWithPassword({ 
-            email, 
-            password,
-          })
-        : await supabase.auth.signUp({ 
-            email, 
-            password,
-            options: {
-              data: {
-                username: username,
-              }
-            }
-          });
+      if (isLogin) {
+        // Check if input is email or username
+        const isEmail = emailOrUsername.includes('@');
+        let email = emailOrUsername;
+        
+        if (!isEmail) {
+          // If username, get the corresponding email
+          const { data: userData, error: userError } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('username', emailOrUsername)
+            .single();
+          
+          if (userError || !userData) {
+            throw new Error('Invalid username or password');
+          }
+        }
 
-      if (error) throw error;
+        const { error } = await supabase.auth.signInWithPassword({ 
+          email: email, 
+          password 
+        });
+        
+        if (error) throw error;
+
+      } else {
+        // Check if username exists
+        const { data: existingUser } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('username', username)
+          .single();
+
+        if (existingUser) {
+          throw new Error('Username already exists. Please choose a different one.');
+        }
+
+        const { error } = await supabase.auth.signUp({ 
+          email: emailOrUsername, 
+          password,
+          options: {
+            data: {
+              username: username,
+            }
+          }
+        });
+
+        if (error) throw error;
+      }
 
       toast({
         title: isLogin ? "Welcome back!" : "Account created",
@@ -80,14 +113,14 @@ const Auth = () => {
   return (
     <div className="min-h-screen gradient-bg flex flex-col">
       <div className="flex-1 flex items-center justify-center">
-        <div className="w-full max-w-md space-y-8 bg-white/80 backdrop-blur-sm p-6 rounded-xl dark:bg-black/20 dark:text-white">
+        <div className="w-full max-w-md space-y-8 bg-white/80 backdrop-blur-sm p-6 rounded-xl dark:bg-black/20">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-fashion-text dark:text-[#F2FCE2] font-playfair">
               {isLogin ? "Welcome Back" : "Create Account"}
             </h2>
             <p className="text-fashion-muted dark:text-[#E5DEFF]/80 mt-2">
               {isLogin
-                ? "Sign in to your account to continue"
+                ? "Sign in with your email or username"
                 : "Sign up for a new account"}
             </p>
           </div>
@@ -95,49 +128,50 @@ const Auth = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {!isLogin && (
               <div className="space-y-2">
-                <Label htmlFor="username" className="text-fashion-text dark:text-[#F2FCE2]">Username</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
-                  type="text"
-                  placeholder="Enter your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Choose a username"
                   required={!isLogin}
-                  className="bg-fashion-input dark:bg-black/40 dark:text-white"
+                  className="rounded-full border-fashion-border"
                 />
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-fashion-text dark:text-[#F2FCE2]">Email</Label>
+              <Label htmlFor="emailOrUsername">
+                {isLogin ? "Email or Username" : "Email"}
+              </Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="emailOrUsername"
+                type={isLogin ? "text" : "email"}
+                value={emailOrUsername}
+                onChange={(e) => setEmailOrUsername(e.target.value)}
+                placeholder={isLogin ? "Enter your email or username" : "Enter your email"}
                 required
-                className="bg-fashion-input dark:bg-black/40 dark:text-white"
+                className="rounded-full border-fashion-border"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-fashion-text dark:text-[#F2FCE2]">Password</Label>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
                 required
-                className="bg-fashion-input dark:bg-black/40 dark:text-white"
+                className="rounded-full border-fashion-border"
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full bg-[#F2FCE2] text-[#1B1B1B] hover:bg-[#E5F0D5] border border-[#E5E5E5] dark:bg-[#F2FCE2]/20 dark:text-white dark:hover:bg-[#F2FCE2]/30"
               disabled={loading}
+              className="w-full rounded-full bg-[#F2FCE2] text-[#1B1B1B] hover:bg-[#E5F0D5] border-[#E5E5E5] dark:bg-[#F2FCE2]/20 dark:text-white dark:hover:bg-[#F2FCE2]/30"
             >
               {loading ? "Loading..." : (isLogin ? "Sign In" : "Sign Up")}
             </Button>

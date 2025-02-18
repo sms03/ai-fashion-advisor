@@ -5,7 +5,11 @@ const fashionQuotes = [
   "Style is a way to say who you are without having to speak",
   "Fashion is the armor to survive everyday life",
   "Fashion is the most powerful art there is",
-  "Fashion is about dressing according to what's fashionable; style is more about being yourself"
+  "Fashion is about dressing according to what's fashionable; style is more about being yourself",
+  "Life is too short to wear boring clothes",
+  "Style is something each of us already has, all we need to do is find it",
+  "Fashion fades, style is eternal",
+  "Dress like everyday is a runway"
 ];
 
 export const TypingHeading = () => {
@@ -35,7 +39,7 @@ export const TypingHeading = () => {
   }, [currentQuoteIndex]);
 
   return (
-    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-fashion-text tracking-tight py-8">
+    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-fashion-text dark:text-[#F2FCE2] font-playfair tracking-tight py-8">
       {displayedText}
     </h1>
   );
